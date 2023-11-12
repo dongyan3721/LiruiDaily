@@ -1,0 +1,14 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="LiRuiSecond:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>LiRuiSecond</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
+    <root id="archive" name="LiRuiSecond-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="LiRuiSecond:war exploded" />
+    </root>
+  </artifact>
+</component>

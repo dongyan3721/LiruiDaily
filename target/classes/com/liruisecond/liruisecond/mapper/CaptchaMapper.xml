@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liruisecond.liruisecond.mapper.CaptchaMapper">
+    <insert id="insertIntoCaptchaUUIDAndValue" parameterType="java.lang.String">
+        insert into captcha
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uuid != null and uuid != ''">uuid,</if>
+            <if test="value != null and value != ''">value,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uuid !=null and uuid != ''">#{uuid},</if>
+            <if test="value != null and value != ''">#{value},</if>
+        </trim>
+    </insert>
+
+
+    <select id="getCaptchaValueByUUID" resultType="java.lang.String">
+        select value from captcha where uuid = #{id}
+    </select>
+
+
+</mapper>
