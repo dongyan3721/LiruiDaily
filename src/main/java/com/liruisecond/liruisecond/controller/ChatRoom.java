@@ -13,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet(name="chatroom", value = "/chatroom")
@@ -58,6 +57,7 @@ public class ChatRoom extends HttpServlet {
             members.add("All");
             members.add(name);
             servletContext.setAttribute("members", members);
+            req.getRequestDispatcher("./view/ChatRoom.jsp").forward(req, resp);
         }else{
             ArrayList<String> members = (ArrayList<String>)servletContext.getAttribute("members");
             if(members.contains(name)){
