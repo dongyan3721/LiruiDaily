@@ -8,10 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 @WebServlet(name="accept", value = "/accept")
@@ -25,15 +27,34 @@ public class MessageAccept extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+//        System.out.println(req.getHeader("Content-Type"));
+        Map<String, String[]> map = req.getParameterMap();
+        map.forEach((key, value)->{
+            System.out.println(key+"-"+Arrays.toString(value));
+        });
+        HttpSession session = req.getSession(false);
+        if(session==null){
+            session = req.getSession();
+        }
+        if(req.getParameter("first")!=null&&session.getAttribute("isFirst")==null){
+            addMessage(req, resp, req.getParameter("origin"), req.getParameter("msg"), req.getParameter("userSel"));
+            session.setAttribute("isFirst", false);
+            return;
+        }
+        if(session.getAttribute("leave")!=null){
+            System.out.println(session.getAttribute("leave"));
+            session.invalidate();
+            req.getRequestDispatcher("/view/Login.jsp");
+            return;
+        }
+        addMessage(req, resp, req.getParameter("origin"), req.getParameter("msg"), req.getParameter("userSel"));
+    }
 
-
-        Map<String, String[]> parameterMap = req.getParameterMap();
-
-
-
-        String userSel = parameterMap.get("userSel")[0];
-        String msg = parameterMap.get("msg")[0];
-        String origin = parameterMap.get("origin")[0];
+    private void addMessage(HttpServletRequest req, HttpServletResponse resp, String origin, String msg, String userSel){
+        req.getSession().setAttribute("origin", origin);
+        System.out.println("origin"+origin);
+        System.out.println("msg"+msg);
+        System.out.println("userSel"+userSel);
         Message message = new Message();
         message.setFrom(origin);
         message.setMsg(msg);

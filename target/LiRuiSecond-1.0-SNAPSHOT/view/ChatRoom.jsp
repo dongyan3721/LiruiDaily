@@ -9,6 +9,7 @@
 <html>
 <head>
     <title>chatroom</title>
+    <script src="http://i.mooc.chaoxing.com/style/defstyle/js/jquery.min.js"></script>
 </head>
 <body>
 <h1>聊天室</h1>
@@ -26,8 +27,7 @@
                 if (!member.equals(session.getAttribute("name"))) {
 
     %>
-    <option><%=member%>
-    </option>
+    <option value="<%=member%>"><%=member%></option>
     <%
                 }
             }
@@ -36,36 +36,83 @@
         }
     %>
     </select>
-    发送的消息：<input type="text" name="msg">
-    <input type="submit" name="发送">
+    <input type="hidden" name="first" id="first-input">
+    <input type="hidden"  name="leave" id="leave-input">
+    发送的消息：<input type="text" name="msg" id="msg">
+    <button onclick="onsubmit" id="submit-btn">发送</button>
 </FORM>
 <button id="exit" onclick="leaveMsg()">退出聊天室</button>
 <script>
     function firstRequest(){
-        var username = ${name}
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/api/accept', true);
-        xhr.setRequestHeader("Content--Type", "application/x-www.form-urlencoded");
-        var params = 'msg=我来辣&origin='+username+'&userSel=All&first=right'
-        xhr.send(params);
+        /**var username = ""
+        var params = new FormData();
+        params.append("msg", "我来辣")
+        params.append("origin", username);
+        params.append("userSel", "All");
+        params.append("first", "true");
+        $.ajax({
+            url: "http://localhost:8080/api/accept",
+            type: "POST",
+            cache: false,
+            data: params,
+            processData: false,
+            contentType: false
+        }).done(
+            function (res){
+                console.log(res)
+            }
+        ).fail(
+            function (err){
+                console.log(err)
+            }
+        )*/
+        document.getElementById("first-input").value = "right";
+        document.getElementById("mySelect").value = "All";
+        document.getElementById("msg").value = "我来辣"
+        document.getElementById("submit-btn").click();
+        document.getElementById("first-input").value = null;
+        document.getElementById("msg").value = null;
     }
     document.addEventListener("DOMContentLoaded", firstRequest);
 
     function leaveMsg(){
-        var username = ${name}
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'http://localhost:8080/api/accept', true);
-        xhr.setRequestHeader("Content--Type", "application/x-www.form-urlencoded");
-        var params = 'msg=我走辣&origin='+username+'&userSel=All&leave=right'
-        xhr.send(params);
+        /**var username = ""
+        var params = new FormData();
+        params.append("msg", "我走辣")
+        params.append("origin", username);
+        params.append("userSel", "All");
+        params.append("leave", "true");
+        $.ajax({
+            url: "http://localhost:8080/api/accept",
+            type: "POST",
+            cache: false,
+            data: params,
+            processData: false,
+            contentType: "application/x-www-form-urlencoded"
+        }).done(
+            function (res){
+                console.log(res)
+            }
+        ).fail(
+            function (err){
+                console.log(err)
+            }
+        )*/
+        document.getElementById("leave-input").value = "right";
+        document.getElementById("mySelect").value = "All";
+        document.getElementById("msg").value = "我走辣"
+        document.getElementById("submit-btn").click();
+        document.getElementById("leave-input").value = null;
+        document.getElementById("msg").value = null;
     }
 
-
+    // 关闭浏览器默认给他的Session销毁掉
+    window.addEventListener('beforeunload', leaveMsg);
 
     var length = 0;
     var textarea = document.getElementById('chat');
     function getXhr(){
-        var username = ${name}
+        var username = "${name}"
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'http://localhost:8080/api/accept', true);
         xhr.onreadystatechange = function() {
@@ -92,7 +139,7 @@
     }
 
     function getSelectionOptions(){
-        var username = ${name}
+        var username = "${name}"
         var xhr = new XMLHttpRequest();
         xhr.open('GET', 'http://localhost:8080/api/chatroom', true);
         xhr.onreadystatechange = function() {
