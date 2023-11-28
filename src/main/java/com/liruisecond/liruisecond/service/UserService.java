@@ -1,6 +1,6 @@
 package com.liruisecond.liruisecond.service;
 
-import com.liruisecond.liruisecond.mapper.CaptchaMapper;
+import com.liruisecond.liruisecond.mapper.UserOperateMapper;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -9,9 +9,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class CaptchaService {
+public class UserService {
     private final SqlSession sqlSession;
-    public CaptchaService() {
+    public UserService() {
         InputStream resourceAsStream = null;
         try {
             resourceAsStream = Resources.getResourceAsStream("mybatis-config.xml");
@@ -22,14 +22,14 @@ public class CaptchaService {
         this.sqlSession = build.openSession();
     }
 
-    public int insertIntoCaptchaUUIDAndValue(String uuid, String value){
-        int ret =  this.sqlSession.getMapper(CaptchaMapper.class).insertIntoCaptchaUUIDAndValue(uuid, value);
+    public int insertIntoUsers(String username, String password){
+        int ret  = this.sqlSession.getMapper(UserOperateMapper.class).createNewUser(username, password);
         this.sqlSession.commit();
         return ret;
     }
 
-    public String getCaptchaValueByUUID(String UUID){
-        return this.sqlSession.getMapper(CaptchaMapper.class).getCaptchaValueByUUID(UUID);
+    public String selectPasswordByUsername(String username){
+        return this.sqlSession.getMapper(UserOperateMapper.class).getPasswordByUsername(username);
     }
 
     public void closeConn(){
